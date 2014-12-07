@@ -169,7 +169,7 @@ void InitializeList()
 
 void startUp ()
 {
-	printf("DISCTRU Machine Project: 4x4 Sudoku\n");
+	printf("\n");
 	printf("Submitted by Consuelo, Magpale, Reccion\n");
 	printf("Section S17\n\n");
 }
