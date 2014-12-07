@@ -35,7 +35,7 @@ int isValid(string10 coord) /* CHECKS INPUT IF IT'S A VLAID COORDINATE */
 	return 0;
 }
 
-int checkFree(int x1, int y1)  
+int checkFree(int x1, int y1)  /*CHECKS IF INPUT IS AN ELEMENT OF FREE*/
 {
 	listType *Temp; 
 	int Found = 0;
@@ -65,7 +65,24 @@ int changetoInt (string10 coord, int *x, int *y) /*SYNTAX IS ALWAYS CORRECT #-#*
 	}
 	else return 1;
 }
-
+void AddasNodeinUDTQ(int x1, int y1)
+{
+ listType *temp;   
+ temp=malloc(sizeof(listType));
+ temp->pnext=NULL;
+ temp->x=x1;
+ temp->y=y1;
+ if(A[x1-1]==NULL)
+ {
+ 	A[x1-1]=temp;
+ 	tailA[x1-1]=temp;
+ }
+ else
+ {
+ 	tailA[x1-1]->pnext=temp;
+ 	tailA[x1-1]=temp;
+ }
+}
 void NextMove()                       /*Gets uno dos tres quatro?*/
 {
 	string10 coord;
@@ -80,7 +97,7 @@ void NextMove()                       /*Gets uno dos tres quatro?*/
 		gets(coord); 
 		
 		if(!strcmp(coord,"EXIT"))        /*Exiting the program*/
-	    {
+	        {
 			  printf("Thank You for playing!\n");
 			  getch();
 			  exit(1);
@@ -91,7 +108,10 @@ void NextMove()                       /*Gets uno dos tres quatro?*/
 		{
 			flag = checkFree(x,y);
 			if (flag)
-				printf("FOUND\n");
+			{
+			      printf("FOUND\n");
+			      AddasNodeinUDTQ(x,y); /*Adds the coordinates to uno dos tres Quatro*/
+			}
 			else printf("NOT FOUND\n");
 		}
 		
