@@ -140,7 +140,7 @@ void NextMove()                       /*Gets uno dos tres quatro?*/
 			      AddasNodeinUDTQ(x,y,turn); /*Adds the coordinates to uno dos tres Quatro*/
 			      DeleteFromFree(x,y); /*deletes the node containing users input from free*/
 			}
-			else printf("NOT FOUND\n");
+			else printf("Error: Coordinate entered is not available.\n");
 		}
 		
 		if (F[0] == NULL && F[1] == NULL && F[2] == NULL && F[3] == NULL)
