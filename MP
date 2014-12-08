@@ -18,7 +18,8 @@ typedef struct list listType;
 typedef listType *listArray[4];
 
 /* GLOBAL VARIABLES */
-listArray F, A, displayList, tailA;
+listArray F, UDTQ, displayList, tailUDTQ;
+listType *A, *B, *C, *D;
 int over = 0;
 
 void displayTable ()
@@ -94,15 +95,15 @@ void AddasNodeinUDTQ(int x1, int y1,int turn)
 	temp->pNext=NULL;
 	temp->x=x1;
 	temp->y=y1;
-	if(A[turn-1]==NULL) /* IF THERE'S NO ELEMENT YET */
+	if(UDTQ[turn-1]==NULL) /* IF THERE'S NO ELEMENT YET */
 	{
-		A[turn-1]=temp;
-		tailA[turn-1]=temp;
+		UDTQ[turn-1]=temp;
+		tailUDTQ[turn-1]=temp;
 	}
 	else
 	{
-		tailA[turn-1]->pNext=temp;
-		tailA[turn-1]=temp;
+		tailUDTQ[turn-1]->pNext=temp;
+		tailUDTQ[turn-1]=temp;
 	}
 }
 
@@ -193,6 +194,81 @@ void NextMove()                       /*Gets uno dos tres quatro?*/
 	} while ( !over );
 }
 
+int Match(listType *patn,listType *posns)
+{
+	int match=0;
+	listType *patntemp;
+	listType *posnstemp;
+	
+	patntemp=patn;
+
+	
+	while(patntemp)
+	{
+		posnstemp=posns;
+		while(posnstemp)
+		{
+			if(patntemp->x==posnstemp->x&&patntemp->y==posnstemp->y)
+				match++;
+			posnstemp=posnstemp->pNext;
+		}
+		patntemp=patntemp->pNext;
+	}
+	return match;
+}
+
+void InitializeABCD(int num)
+{
+	int i, x1, y1;
+	listType *pRunner, *pTrail;
+	
+	pRunner = malloc(sizeof(listType));
+	pTrail = pRunner;
+	
+	switch (num)
+	{
+		case 0: A = pRunner; 
+					x1 = 1;
+					y1 = 1; break;
+		case 1: B = pRunner;  
+					x1 = 1;
+					y1 = 3; break;
+		case 2: C = pRunner;  
+					x1 = 3;
+					y1 = 1; break;
+		case 3: D = pRunner;  
+					x1 = 3;
+					y1 = 3; break;
+	}
+	
+	for (i = 0; i < 4; i ++)
+	{
+		switch (i)
+		{
+			case 0: pRunner->x = x1;
+					pRunner->y = y1; 
+					break;
+			case 1: pRunner->x = x1;
+					pRunner->y = y1 + 1; 
+					break;
+			case 2: pRunner->x = x1 + 1;
+					pRunner->y = y1; 
+					break;
+			case 3: pRunner->x = x1 + 1;
+					pRunner->y = y1 + 1; 
+					break;
+		}
+		if (i == 3)
+			pRunner->pNext = NULL;
+		else
+		{
+			pRunner = malloc(sizeof(listType));
+			pTrail->pNext = pRunner;
+			pTrail = pRunner;
+		}
+	}
+}
+
 void InitializeF () /* INITIALIZE X AND Y COORDS OF F LIST */
 {
 	int i, j;
@@ -255,19 +331,23 @@ void InitializeList()
 {
 	int i;
 	
-	/* FREE */
-	for (i = 0; i < 4; i ++)
-		F[i] = NULL;
-	
-	/* UNO DOS TRES QUATRO */
 	for (i = 0; i < 4; i ++)
 	{
-		A[i] = NULL;
-		tailA[i] = A[i];
+		F[i] = NULL;	/* FREE */
+		UDTQ[i] = NULL;	/* UNO DOS TRES QUATRO */
+		tailUDTQ[i] = UDTQ[i];
+		displayList[i] = NULL;	/* DISPLAYLIST */
 	}
 	
+	A = NULL;
+	B = NULL;
+	C = NULL;
+	D = NULL;
+
 	InitializeF(); /* INITIALIZE ALL VALUES OF X AND Y TO FREE LIST */
 	InitializeDisplayList(); /* INITIALIZE ALL VALUES OF X AND Y TO DISPLAY LIST */
+	for (i = 0; i < 4; i ++)
+		InitializeABCD(i);
 }
 
 void startUp ()
@@ -275,29 +355,6 @@ void startUp ()
 	printf("\n");
 	printf("Submitted by Consuelo, Magpale, Reccion\n");
 	printf("Section S17\n\n");
-}
-
-int Match(listType *patn,listType *posns)
-{
-	int match=0;
-	listType *patntemp;
-	listType *posnstemp;
-	
-	patntemp=patn;
-
-	
-	while(patntemp)
-	{
-		posnstemp=posns;
-		while(posnstemp)
-		{
-			if(patntemp->x==posnstemp->x&&patntemp->y==posnstemp->y)
-				match++;
-			posnstemp=posnstemp->pNext;
-		}
-		patntemp=patntemp->pNext;
-	}
-	return match;
 }
 
 int main ()
