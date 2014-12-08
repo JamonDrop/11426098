@@ -277,6 +277,29 @@ void startUp ()
 	printf("Section S17\n\n");
 }
 
+int Match(listType *patn,listType *posns)
+{
+	int match=0;
+	listType *patntemp;
+	listType *posnstemp;
+	
+	patntemp=patn;
+
+	
+	while(patntemp)
+	{
+		posnstemp=posns;
+		while(posnstemp)
+		{
+			if(patntemp->x==posnstemp->x&&patntemp->y==posnstemp->y)
+				match++;
+			posnstemp=posnstemp->pNext;
+		}
+		patntemp=patntemp->pNext;
+	}
+	return match;
+}
+
 int main ()
 {
 	startUp();
