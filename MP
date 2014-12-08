@@ -65,24 +65,26 @@ int changetoInt (string10 coord, int *x, int *y) /*SYNTAX IS ALWAYS CORRECT #-#*
 	}
 	else return 1;
 }
+
 void AddasNodeinUDTQ(int x1, int y1,int turn)
 {
- listType *temp;   
- temp=malloc(sizeof(listType));
- temp->pNext=NULL;
- temp->x=x1;
- temp->y=y1;
- if(A[turn-1]==NULL)
- {
- 	A[turn-1]=temp;
- 	tailA[turn-1]=temp;
- }
- else
- {
- 	tailA[turn-1]->pNext=temp;
- 	tailA[turn-1]=temp;
- }
+	listType *temp;   
+	temp=malloc(sizeof(listType));
+	temp->pNext=NULL;
+	temp->x=x1;
+	temp->y=y1;
+	if(A[turn-1]==NULL) /* IF THERE'S NO ELEMENT YET */
+	{
+		A[turn-1]=temp;
+		tailA[turn-1]=temp;
+	}
+	else
+	{
+		tailA[turn-1]->pNext=temp;
+		tailA[turn-1]=temp;
+	}
 }
+
 void DeleteFromFree(int x1,int y1)      /*deletes the node containing users input from free*/
 {
 	listType *current,*trail;	
@@ -120,7 +122,7 @@ void NextMove()                       /*Gets uno dos tres quatro?*/
 		if(turn == 5)                     
 		   turn = 1;
 		
-		printf("\n\nCoordinates (#-#): ");   
+		printf("\nCoordinates (#-#): ");   
 		gets(coord); 
 		
 		if(!strcmp(coord,"EXIT"))        /*Exiting the program*/
