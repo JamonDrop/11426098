@@ -10,6 +10,7 @@ struct list
 {
 	int x;
 	int y;
+	int num;
 	struct list *pNext;
 };
 	
@@ -17,8 +18,28 @@ typedef struct list listType;
 typedef listType *listArray[4];
 
 /* GLOBAL VARIABLES */
-listArray F, A, tailF, tailA;
+listArray F, A, displayList, tailA;
 int over = 0;
+
+void displayTable ()
+{
+	int i;
+	listType *pTemp = NULL;
+	
+	printf("\n");
+	for (i = 0; i < 4; i ++)
+	{
+		pTemp = displayList[i];
+		while (pTemp)
+		{
+			if (pTemp->num == 0)
+				printf("(%d,%d)  ", pTemp->x, pTemp->y);
+	        else printf("( %d )  ", pTemp->num);
+			pTemp = pTemp->pNext;
+		}
+		printf("\n");
+	}
+}
 
 int isValid(string10 coord) /* CHECKS INPUT IF IT'S A VLAID COORDINATE */
 {
@@ -112,6 +133,21 @@ void DeleteFromFree(int x1,int y1)      /*deletes the node containing users inpu
 	    }
 	}
 }
+
+void changeDisplayList (int turn, int x1, int y1)
+{
+	listType *pTemp;
+	int index = x1;
+	pTemp = displayList[index-1];
+	
+	while (pTemp)
+	{
+		if (pTemp->y == y1)
+			pTemp->num = turn;
+		pTemp = pTemp->pNext;
+	}
+}
+
 void NextMove()                       /*Gets uno dos tres quatro?*/
 {
 	string10 coord;
@@ -119,6 +155,8 @@ void NextMove()                       /*Gets uno dos tres quatro?*/
 	
   	do
 	{                                     /*repeats getting iput while free != NULL*/
+		displayTable();
+		
 		if(turn == 5)                     
 		   turn = 1;
 		
@@ -138,16 +176,19 @@ void NextMove()                       /*Gets uno dos tres quatro?*/
 			flag = checkFree(x,y);
 			if (flag)
 			{
-			      printf("FOUND\n");
 			      AddasNodeinUDTQ(x,y,turn); /*Adds the coordinates to uno dos tres Quatro*/
 			      DeleteFromFree(x,y); /*deletes the node containing users input from free*/
-			      turn ++;
+			      changeDisplayList(turn,x,y);
+			      turn++;
 			}
 			else printf("Error: Coordinate entered is not available.\n");
 		}
 		
 		if (F[0] == NULL && F[1] == NULL && F[2] == NULL && F[3] == NULL)
+		{
 			over = 1;
+			displayTable();
+		}
 	
 	} while ( !over );
 }
@@ -167,6 +208,7 @@ void InitializeF () /* INITIALIZE X AND Y COORDS OF F LIST */
 		{
 			pRunner->x = i + 1;
 			pRunner->y = j + 1;
+			pRunner->num = 0;
 			if (j == 3)
 				pRunner->pNext = NULL; /* REACHED THE END OF THE LIST */
 			else
@@ -180,20 +222,32 @@ void InitializeF () /* INITIALIZE X AND Y COORDS OF F LIST */
 	}
 }
 
-void displayF ()
+void InitializeDisplayList () /* INITIALIZE X AND Y COORDS OF DISPLAY LIST */
 {
-	int i;
-	listType *pTemp = NULL;
+	int i, j;
+	listType *pRunner = NULL, *pTrail = NULL;
 	
 	for (i = 0; i < 4; i ++)
 	{
-		pTemp = F[i];
-		while (pTemp)
+		displayList[i] = malloc(sizeof(listType));
+		displayList[i]->pNext = NULL;
+		pRunner = displayList[i];
+		pTrail = pRunner;
+		for (j = 0; j < 4; j ++)
 		{
-			printf("(%d,%d)  ", pTemp->x, pTemp->y);
-			pTemp = pTemp->pNext;
+			pRunner->x = i + 1;
+			pRunner->y = j + 1;
+			pRunner->num = 0;
+			if (j == 3)
+				pRunner->pNext = NULL; /* REACHED THE END OF THE LIST */
+			else
+			{
+				/* CREATE ANOTHER NODE */
+				pRunner = malloc(sizeof(listType));
+				pTrail->pNext = pRunner;
+				pTrail = pRunner;
+			}
 		}
-		printf("\n");
 	}
 }
 
@@ -203,10 +257,7 @@ void InitializeList()
 	
 	/* FREE */
 	for (i = 0; i < 4; i ++)
-	{
 		F[i] = NULL;
-		tailF[i] = F[i];
-	}
 	
 	/* UNO DOS TRES QUATRO */
 	for (i = 0; i < 4; i ++)
@@ -216,6 +267,7 @@ void InitializeList()
 	}
 	
 	InitializeF(); /* INITIALIZE ALL VALUES OF X AND Y TO FREE LIST */
+	InitializeDisplayList(); /* INITIALIZE ALL VALUES OF X AND Y TO DISPLAY LIST */
 }
 
 void startUp ()
@@ -229,7 +281,6 @@ int main ()
 {
 	startUp();
 	InitializeList();
-	displayF();
 	NextMove();
 	getch ();
 	return 0;
