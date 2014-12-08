@@ -69,7 +69,7 @@ void AddasNodeinUDTQ(int x1, int y1)
 {
  listType *temp;   
  temp=malloc(sizeof(listType));
- temp->pnext=NULL;
+ temp->pNext=NULL;
  temp->x=x1;
  temp->y=y1;
  if(A[x1-1]==NULL)
@@ -79,9 +79,36 @@ void AddasNodeinUDTQ(int x1, int y1)
  }
  else
  {
- 	tailA[x1-1]->pnext=temp;
+ 	tailA[x1-1]->pNext=temp;
  	tailA[x1-1]=temp;
  }
+}
+void DeleteFromFree(int x1,int y1)      /*deletes the node containing users input from free*/
+{
+	listType *current,*trail;	
+	current=F[x1-1];
+	int found=0;
+	trail=current;
+	while(current&&!found)
+	{
+		if (F[x1-1]->x==x1&&F[x1-1]->y==y1)
+		{
+			found=1;
+			F[x1-1]=current->pNext;
+			free(current);
+		}
+		else 
+		{
+			trail=current;
+			current=current->pNext;
+			if(current->x==x1&&current->y==y1)
+			{
+				found=1;
+				trail->pNext=current->pNext;
+				free(current);
+			}
+	    }
+	}
 }
 void NextMove()                       /*Gets uno dos tres quatro?*/
 {
@@ -111,6 +138,7 @@ void NextMove()                       /*Gets uno dos tres quatro?*/
 			{
 			      printf("FOUND\n");
 			      AddasNodeinUDTQ(x,y); /*Adds the coordinates to uno dos tres Quatro*/
+			      DeleteFromFree(x,y); /*deletes the node containing users input from free*/
 			}
 			else printf("NOT FOUND\n");
 		}
