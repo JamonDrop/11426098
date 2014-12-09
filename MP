@@ -261,8 +261,6 @@ void check_vertical_horizontal()
 {
 	printf("enter check!\n");
 	int i=0,k;
-	int cntV=0,cntH=0;
-	int indVert=0,indHort=0;
 	int error=0;
 	
 	listType *pVert = NULL, *pHort = NULL, *pComp = NULL;
