@@ -257,6 +257,136 @@ void changeDisplayList (int turn, int x1, int y1)
 	}
 }
 
+void check_vertical_horizontal()
+{
+	printf("enter check!\n");
+	int i=0,k;
+	int cntV=0,cntH=0;
+	int indVert=0,indHort=0;
+	int error=0;
+	
+	listType *pVert = NULL, *pHort = NULL, *pComp = NULL;
+	printf("done intializing\n");
+	for(i = 0; i < 4; i++)
+	{	
+		pComp = displayList[i];
+		pHort = displayList[i];
+		
+		if(i == 0)
+		{
+			pHort = pHort->pNext;
+			while(pHort != NULL)
+			{
+				if(pHort->num == pComp->num)
+				{
+					printf("error in horizontal row of (1,1)\n");
+					error++;
+				}
+				pHort=pHort->pNext;
+			}
+			
+			for(k=1; k<4; k++)
+			{
+				pVert = displayList[k];
+				if(pVert->num == pComp->num)
+				{
+					printf("error in vertical column of (1,1)\n");
+					error++;
+				}
+			}
+			
+		}
+		
+		if(i == 1)
+		{
+			pComp=pComp->pNext;
+			while(pHort != NULL)
+			{
+				if(pHort == pComp)
+					pHort=pHort->pNext;
+				if(pHort->num == pComp->num)
+				{
+					printf("error in horizontal row of (2,2)\n");
+					error++;
+				}
+				pHort = pHort->pNext;
+			}
+			
+			for(k = 0;k < 4; k++ )
+			{
+				if(k == 1)
+					k++;
+				pVert = displayList[k];
+				pVert=pVert->pNext;;
+				if(pVert->num == pComp->num)
+				{
+					printf("error in vertical column of (2,2)\n");
+					error++;
+				}
+			}
+		}
+		
+		if(i == 2)
+		{
+			pComp=pComp->pNext->pNext;
+			while(pHort != NULL)
+			{
+				if(pHort == pComp)
+					pHort=pHort->pNext;
+				if(pHort->num == pComp->num)
+				{
+					printf("error in horizontal row of (3,3)\n");
+					error++;
+				}
+				pHort = pHort->pNext;
+			}
+			
+			for(k = 0;k < 4; k++ )
+			{
+				if(k == 2)
+					k++;
+				pVert = displayList[k];
+				pVert=pVert->pNext->pNext;
+				if(pVert->num == pComp->num)
+				{
+					printf("error in vertical column of (3,3)\n");
+					error++;
+				}
+			}
+			
+		}
+		
+		if(i == 3)
+		{
+			pComp=pComp->pNext->pNext->pNext;
+			while(pHort != NULL)
+			{
+				if(pHort == pComp)
+					break;
+				if(pHort->num == pComp->num)
+				{
+					printf("error in horizontal row of (4,4)\n");
+					error++;
+				}
+				pHort = pHort->pNext;
+			}
+			
+			for(k = 0;k < 3; k++)
+			{
+				pVert = displayList[k];
+				pVert = pVert->pNext->pNext->pNext;
+				if(pVert->num == pComp->num)
+				{
+					printf("error in vertical column of (4,4)\n");
+					error++;
+				}
+			}
+		}
+		
+	}
+	printf("total number of errors! %d \n", error);
+}
+
 void NextMove()                       /*Gets uno dos tres quatro?*/
 {
 	string10 coord;
