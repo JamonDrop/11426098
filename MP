@@ -433,11 +433,8 @@ void NextMove()                       /*Gets uno dos tres quatro?*/
 int Match(listType *patn,listType *posns)
 {
 	int match=0;
-	listType *patntemp;
+	listType *patntemp = patn;
 	listType *posnstemp;
-	
-	patntemp=patn;
-
 	
 	while(patntemp)
 	{
