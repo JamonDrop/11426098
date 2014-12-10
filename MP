@@ -22,6 +22,35 @@ listArray F, UDTQ, displayList, tailUDTQ;
 listType *A, *B, *C, *D;
 int over = 0;
 
+void FreeList(listType *pList)
+{
+	listType *pTrail = pList;
+	int i;
+	
+	while (displayList[i] != NULL)
+	{
+		displayList[i] = displayList[i]->pNext;
+		free(pTrail);
+		pTrail = displayList[i];
+	}
+}
+
+void FreeAll ()
+{
+	int i;
+	for(i = 0; i < 4; i ++)
+	{
+		FreeList(F[i]);
+		FreeList(UDTQ[i]);
+		FreeList(displayList[i]);
+		FreeList(tailUDTQ[i]);
+	}
+	FreeList(A);
+	FreeList(B);
+	FreeList(C);
+	FreeList(D);
+}
+
 void displayTable ()
 {
 	int i;
@@ -245,9 +274,8 @@ void DeleteFromFree(int x1,int y1)      /*deletes the node containing users inpu
 
 void changeDisplayList (int turn, int x1, int y1)
 {
-	listType *pTemp;
 	int index = x1;
-	pTemp = displayList[index-1];
+	listType *pTemp = displayList[index-1];
 	
 	while (pTemp)
 	{
@@ -257,14 +285,12 @@ void changeDisplayList (int turn, int x1, int y1)
 	}
 }
 
-void check_vertical_horizontal()
+int check_vertical_horizontal()
 {
-	printf("enter check!\n");
 	int i=0,k;
 	int error=0;
 	
 	listType *pVert = NULL, *pHort = NULL, *pComp = NULL;
-	printf("done intializing\n");
 	for(i = 0; i < 4; i++)
 	{	
 		pComp = displayList[i];
@@ -276,10 +302,7 @@ void check_vertical_horizontal()
 			while(pHort != NULL)
 			{
 				if(pHort->num == pComp->num)
-				{
-					printf("error in horizontal row of (1,1)\n");
 					error++;
-				}
 				pHort=pHort->pNext;
 			}
 			
@@ -287,10 +310,7 @@ void check_vertical_horizontal()
 			{
 				pVert = displayList[k];
 				if(pVert->num == pComp->num)
-				{
-					printf("error in vertical column of (1,1)\n");
 					error++;
-				}
 			}
 			
 		}
@@ -303,10 +323,7 @@ void check_vertical_horizontal()
 				if(pHort == pComp)
 					pHort=pHort->pNext;
 				if(pHort->num == pComp->num)
-				{
-					printf("error in horizontal row of (2,2)\n");
 					error++;
-				}
 				pHort = pHort->pNext;
 			}
 			
@@ -317,10 +334,7 @@ void check_vertical_horizontal()
 				pVert = displayList[k];
 				pVert=pVert->pNext;;
 				if(pVert->num == pComp->num)
-				{
-					printf("error in vertical column of (2,2)\n");
 					error++;
-				}
 			}
 		}
 		
@@ -332,10 +346,7 @@ void check_vertical_horizontal()
 				if(pHort == pComp)
 					pHort=pHort->pNext;
 				if(pHort->num == pComp->num)
-				{
-					printf("error in horizontal row of (3,3)\n");
 					error++;
-				}
 				pHort = pHort->pNext;
 			}
 			
@@ -346,10 +357,7 @@ void check_vertical_horizontal()
 				pVert = displayList[k];
 				pVert=pVert->pNext->pNext;
 				if(pVert->num == pComp->num)
-				{
-					printf("error in vertical column of (3,3)\n");
 					error++;
-				}
 			}
 			
 		}
@@ -362,10 +370,7 @@ void check_vertical_horizontal()
 				if(pHort == pComp)
 					break;
 				if(pHort->num == pComp->num)
-				{
-					printf("error in horizontal row of (4,4)\n");
 					error++;
-				}
 				pHort = pHort->pNext;
 			}
 			
@@ -374,15 +379,12 @@ void check_vertical_horizontal()
 				pVert = displayList[k];
 				pVert = pVert->pNext->pNext->pNext;
 				if(pVert->num == pComp->num)
-				{
-					printf("error in vertical column of (4,4)\n");
 					error++;
-				}
 			}
 		}
-		
 	}
 	printf("total number of errors! %d \n", error);
+	return error;
 }
 
 void NextMove()                       /*Gets uno dos tres quatro?*/
@@ -401,10 +403,11 @@ void NextMove()                       /*Gets uno dos tres quatro?*/
 		gets(coord); 
 		
 		if(!strcmp(coord,"EXIT"))        /*Exiting the program*/
-	        {
-			  printf("Thank You for playing!\n");
-			  getch();
-			  exit(1);
+	    {
+			printf("Thank You for playing!\n");
+			FreeAll();
+			getch();
+			exit(1);
 		}
 		
 		if (isValid(coord) &&  /*Checks if input of the user is valid (n-n)*/
@@ -430,24 +433,52 @@ void NextMove()                       /*Gets uno dos tres quatro?*/
 	} while ( !over );
 }
 
-int Match(listType *patn,listType *posns)
+int Match(listType *posns,listType *patn)
 {
 	int match=0;
 	listType *patntemp = patn;
 	listType *posnstemp;
 	
-	while(patntemp)
+	if(patntemp == A || patntemp == B || patntemp == C || patntemp == D)
 	{
-		posnstemp=posns;
-		while(posnstemp)
+		while(patntemp)
 		{
-			if(patntemp->x==posnstemp->x&&patntemp->y==posnstemp->y)
-				match++;
-			posnstemp=posnstemp->pNext;
+			posnstemp=posns;
+			while(posnstemp)
+			{
+				if(patntemp->x==posnstemp->x&&patntemp->y==posnstemp->y)
+					match++;
+				posnstemp=posnstemp->pNext;
+			}
+			patntemp=patntemp->pNext;
 		}
-		patntemp=patntemp->pNext;
 	}
+	else match = 1 + check_vertical_horizontal();
 	return match;
+}
+
+int Check (listType *posns)
+{
+	listType *H = NULL, *V = NULL;
+	if (Match(posns, A) == 1 && Match(posns, B) == 1 && Match(posns,C) == 1 && Match(posns, D) == 1
+		&& Match(posns, H) == 1 && Match(posns, V) == 1)
+		return 1;
+	else return 0;
+	
+}
+
+void EndGame ()
+{
+	int i = 0, isWrong = 0;
+	while (i < 4 && !isWrong)
+	{
+		if (!Check(UDTQ[i]))
+			isWrong = 1;
+		i ++;
+	}
+	if (!isWrong)
+		printf("CONGRATULATIONS!\nYOU WON!\n");
+	else printf("SORRY, YOU LOSE.\n");
 }
 
 void InitializeABCD(int num)
@@ -585,7 +616,6 @@ void InitializeList()
 
 void startUp ()
 {
-	printf("\n");
 	printf("Submitted by Consuelo, Magpale, Reccion\n");
 	printf("Section S17\n\n");
 }
@@ -595,6 +625,8 @@ int main ()
 	startUp();
 	InitializeList();
 	NextMove();
+	EndGame();
+	FreeAll();
 	getch ();
 	return 0;
 }
