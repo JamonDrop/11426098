@@ -439,32 +439,39 @@ int Match(listType *posns,listType *patn)
 	listType *patntemp = patn;
 	listType *posnstemp;
 	
-	if(patntemp == A || patntemp == B || patntemp == C || patntemp == D)
+	while(patntemp)
 	{
-		while(patntemp)
+		posnstemp=posns;
+		while(posnstemp)
 		{
-			posnstemp=posns;
-			while(posnstemp)
-			{
-				if(patntemp->x==posnstemp->x&&patntemp->y==posnstemp->y)
-					match++;
-				posnstemp=posnstemp->pNext;
-			}
-			patntemp=patntemp->pNext;
+			if(patntemp->x==posnstemp->x&&patntemp->y==posnstemp->y)
+				match++;
+			posnstemp=posnstemp->pNext;
 		}
+		patntemp=patntemp->pNext;
 	}
-	else match = 1 + check_vertical_horizontal();
+	
 	return match;
 }
 
 int Check (listType *posns)
 {
+	int result = 1;
+	int i = 0, isWrong = 0;
 	listType *H = NULL, *V = NULL;
-	if (Match(posns, A) == 1 && Match(posns, B) == 1 && Match(posns,C) == 1 && Match(posns, D) == 1
-		&& Match(posns, H) == 1 && Match(posns, V) == 1)
-		return 1;
-	else return 0;
-	
+	if (Match(posns, A) == 1 && Match(posns, B) == 1 && Match(posns,C) == 1 && Match(posns, D) == 1)
+	{
+		while (i < 4 && !isWrong)
+		{
+			if (Match(posns, displayList[i]) != 1)
+				isWrong = 1;
+			i ++;
+		}
+		if (isWrong)
+			result = 0;
+	}
+	else result = 0;
+	return result;
 }
 
 void EndGame ()
