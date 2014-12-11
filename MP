@@ -20,6 +20,7 @@ typedef listType *listArray[4];
 /* GLOBAL VARIABLES */
 listArray F, UDTQ, displayList, tailUDTQ;
 listType *A, *B, *C, *D;
+listType *ColA, *ColB, *ColC, *ColD;
 int over = 0;
 
 void FreeList(listType *pList)
@@ -286,105 +287,152 @@ void changeDisplayList (int turn, int x1, int y1)
 }
 
 int check_vertical_horizontal()
-{
-	int i=0,k;
-	int error=0;
+{	printf("enter function\n");
+	listType *pTemp, *HorA, *HorB, *HorC, *HorD, *pRun, *pComp;
+	int i;
+	int error = 0;
 	
-	listType *pVert = NULL, *pHort = NULL, *pComp = NULL;
-	for(i = 0; i < 4; i++)
-	{	
-		pComp = displayList[i];
-		pHort = displayList[i];
-		
-		if(i == 0)
+	HorA = displayList[0];											/*initialize the contents of Hor A -  D*/
+	HorB = displayList[1];
+	HorC = displayList[2];
+	HorD = displayList[3];
+
+	for(i=0; i<4; i++)														/*initialize the contents of Columns A - D*/
+	{
+		switch( i )
 		{
-			pHort = pHort->pNext;
-			while(pHort != NULL)
-			{
-				if(pHort->num == pComp->num)
-					error++;
-				pHort=pHort->pNext;
-			}
-			
-			for(k=1; k<4; k++)
-			{
-				pVert = displayList[k];
-				if(pVert->num == pComp->num)
-					error++;
-			}
-			
-		}
-		
-		if(i == 1)
-		{
-			pComp=pComp->pNext;
-			while(pHort != NULL)
-			{
-				if(pHort == pComp)
-					pHort=pHort->pNext;
-				if(pHort->num == pComp->num)
-					error++;
-				pHort = pHort->pNext;
-			}
-			
-			for(k = 0;k < 4; k++ )
-			{
-				if(k == 1)
-					k++;
-				pVert = displayList[k];
-				pVert=pVert->pNext;;
-				if(pVert->num == pComp->num)
-					error++;
-			}
-		}
-		
-		if(i == 2)
-		{
-			pComp=pComp->pNext->pNext;
-			while(pHort != NULL)
-			{
-				if(pHort == pComp)
-					pHort=pHort->pNext;
-				if(pHort->num == pComp->num)
-					error++;
-				pHort = pHort->pNext;
-			}
-			
-			for(k = 0;k < 4; k++ )
-			{
-				if(k == 2)
-					k++;
-				pVert = displayList[k];
-				pVert=pVert->pNext->pNext;
-				if(pVert->num == pComp->num)
-					error++;
-			}
-			
-		}
-		
-		if(i == 3)
-		{
-			pComp=pComp->pNext->pNext->pNext;
-			while(pHort != NULL)
-			{
-				if(pHort == pComp)
-					break;
-				if(pHort->num == pComp->num)
-					error++;
-				pHort = pHort->pNext;
-			}
-			
-			for(k = 0;k < 3; k++)
-			{
-				pVert = displayList[k];
-				pVert = pVert->pNext->pNext->pNext;
-				if(pVert->num == pComp->num)
-					error++;
-			}
-		}
+			case 0:
+				pRun = ColA;
+				pRun->num = HorA->num;
+				pRun = pRun->pNext;
+				pRun->num = HorB->num;
+				pRun = pRun->pNext;
+				pRun->num = HorC->num;
+				pRun = pRun->pNext;
+				pRun->num = HorD->num;
+				pRun->pNext = NULL;
+				
+			case 1:
+				pRun = ColB;
+				pRun->num = HorA->pNext->num;
+				pRun = pRun->pNext;
+				pRun->num = HorB->pNext->num;
+				pRun = pRun->pNext;
+				pRun->num = HorC->pNext->num;
+				pRun = pRun->pNext;
+				pRun->num = HorD->pNext->num;
+				pRun->pNext = NULL;
+					
+			case 2:
+				pRun = ColC;
+				pRun->num = HorA->pNext->pNext->num;
+				pRun = pRun->pNext;
+				pRun->num = HorB->pNext->pNext->num;
+				pRun = pRun->pNext;
+				pRun->num = HorC->pNext->pNext->num;
+				pRun = pRun->pNext;
+				pRun->num = HorD->pNext->pNext->num;
+				pRun->pNext = NULL;
+						
+			case 3:
+				pRun =  ColD;
+				pRun->num = HorA->pNext->pNext->pNext->num;
+				pRun = pRun->pNext;
+				pRun->num = HorB->pNext->pNext->pNext->num;
+				pRun = pRun->pNext;
+				pRun->num = HorC->pNext->pNext->pNext->num;
+				pRun = pRun->pNext;
+				pRun->num = HorD->pNext->pNext->pNext->num;
+				pRun->pNext = NULL;
+					
+		}	
 	}
-	printf("total number of errors! %d \n", error);
+	
+	for(i = 0; i < 4; i++ )								/*checking of vertical values*/
+	{	
+		switch (i)
+		{
+			case 0:
+				pTemp = ColA;
+				break;
+				
+			case 1:
+				pTemp = ColB;
+				break;
+				
+			case 2:
+				pTemp = ColC;
+				break;
+				
+			case 3:
+				pTemp = ColD;
+				break;
+				
+			default:
+				return;
+		}
+		
+		while(pTemp->pNext != NULL)
+		{
+			pComp = pTemp->pNext;
+			while(pComp != NULL)
+			{
+				if (pTemp->num == pRun->num)
+				{
+					error++;
+				}
+				pComp=pComp->pNext;
+			}
+			
+			pTemp = pTemp->pNext;
+		}
+		
+	}
+	
+	for(i = 0; i < 4; i++)							/*checking of horizontal values*/
+	{
+		switch (i)
+		{
+			case 0:
+				pTemp = HorA;
+				break;
+				
+			case 1:
+				pTemp = HorB;
+				break;
+				
+			case 2:
+				pTemp = HorC;
+				break;
+				
+			case 3:
+				pTemp = HorD;
+				break;
+				
+			default:
+				return;
+		}
+		
+		while(pTemp->pNext != NULL)
+		{
+			pComp = pTemp->pNext;
+			while(pComp != NULL)
+			{
+				if (pTemp->num == pRun->num)
+				{
+					error++;
+				}
+				pComp=pComp->pNext;
+			}
+			
+			pTemp = pTemp->pNext;
+		}
+		
+	}
+	printf("total number of errors: %d", error);
 	return error;
+	
+	
 }
 
 void NextMove()                       /*Gets uno dos tres quatro?*/
@@ -486,6 +534,58 @@ void EndGame ()
 	if (!isWrong)
 		printf("CONGRATULATIONS!\nYOU WON!\n");
 	else printf("SORRY, YOU LOSE.\n");
+}
+
+void InitializeColABCD(int num)
+{
+	int i, x1, y1;
+	listType *pRunner, *pTrail;
+	
+	pRunner = malloc(sizeof(listType));
+	pTrail = pRunner;
+	
+	switch (num)
+	{
+		case 0: ColA = pRunner; 
+					x1 = 1;
+					y1 = 1; break;
+		case 1: ColB = pRunner;  
+					x1 = 1;
+					y1 = 3; break;
+		case 2: ColC = pRunner;  
+					x1 = 3;
+					y1 = 1; break;
+		case 3: ColD = pRunner;  
+					x1 = 3;
+					y1 = 3; break;
+	}
+	
+	for (i = 0; i < 4; i ++)
+	{
+		switch (i)
+		{
+			case 0: pRunner->x = x1;
+					pRunner->y = y1; 
+					break;
+			case 1: pRunner->x = x1;
+					pRunner->y = y1 + 1; 
+					break;
+			case 2: pRunner->x = x1 + 1;
+					pRunner->y = y1; 
+					break;
+			case 3: pRunner->x = x1 + 1;
+					pRunner->y = y1 + 1; 
+					break;
+		}
+		if (i == 3)
+			pRunner->pNext = NULL;
+		else
+		{
+			pRunner = malloc(sizeof(listType));
+			pTrail->pNext = pRunner;
+			pTrail = pRunner;
+		}
+	}
 }
 
 void InitializeABCD(int num)
