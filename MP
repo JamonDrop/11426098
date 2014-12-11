@@ -20,12 +20,11 @@ typedef listType *listArray[4];
 /* GLOBAL VARIABLES */
 listArray F, UDTQ, displayList, tailUDTQ, V;
 listType *A, *B, *C, *D;
-int over = 0;
+int over = 0, result = NULL;
 
 listType * FreeList(listType *pList)
 {
 	listType *pTrail = pList;
-	int i;
 	
 	while (pList != NULL)
 	{
@@ -251,8 +250,8 @@ void AddasNodeinUDTQ(int x1, int y1,int turn)
 void DeleteFromFree(int x1,int y1)      /*deletes the node containing users input from free*/
 {
 	listType *current,*trail;	
-	current=F[x1-1];
 	int found=0;
+	current=F[x1-1];
 	trail=current;
 	while(current&&!found)
 	{
@@ -361,7 +360,7 @@ int Match(listType *posns,listType *patn)
 
 int Check (listType *posns)
 {
-	int result = 1;
+	int product = 1;
 	int i = 0, isWrong = 0;
 	if (Match(posns, A) == 1 && Match(posns, B) == 1 && Match(posns,C) == 1 && Match(posns, D) == 1)
 	{
@@ -372,10 +371,10 @@ int Check (listType *posns)
 			i ++;
 		}
 		if (isWrong)
-			result = 0;
+			product = 0;
 	}
-	else result = 0;
-	return result;
+	else product = 0;
+	return product;
 }
 
 void EndGame ()
@@ -387,7 +386,12 @@ void EndGame ()
 			isWrong = 1;
 		i ++;
 	}
+	
 	if (!isWrong)
+		result = 1;
+	else result = 0;
+	
+	if (result)
 		printf("\n\nCONGRATULATIONS!\nYOU WON!\n");
 	else printf("\n\nSORRY, YOU LOSE.\n");
 }
