@@ -392,47 +392,6 @@ int check_vertical_horizontal()
 		}
 		
 	}
-	
-	for(i = 0; i < 4; i++)							/*checking of horizontal values*/
-	{
-		switch (i)
-		{
-			case 0:
-				pTemp = HorA;
-				break;
-				
-			case 1:
-				pTemp = HorB;
-				break;
-				
-			case 2:
-				pTemp = HorC;
-				break;
-				
-			case 3:
-				pTemp = HorD;
-				break;
-				
-			default:
-				return;
-		}
-		
-		while(pTemp->pNext != NULL)
-		{
-			pComp = pTemp->pNext;
-			while(pComp != NULL)
-			{
-				if (pTemp->num == pRun->num)
-				{
-					error++;
-				}
-				pComp=pComp->pNext;
-			}
-			
-			pTemp = pTemp->pNext;
-		}
-		
-	}
 	printf("total number of errors: %d", error);
 	return error;
 	
