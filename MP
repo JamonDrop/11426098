@@ -50,6 +50,10 @@ void FreeAll ()
 	FreeList(B);
 	FreeList(C);
 	FreeList(D);
+	FreeList(ColA);
+	FreeList(ColB);
+	FreeList(ColC);
+	FreeList(ColD);
 }
 
 void displayTable ()
@@ -536,7 +540,7 @@ void EndGame ()
 	else printf("SORRY, YOU LOSE.\n");
 }
 
-void InitializeColABCD(int num)
+void InitializeColumns(int num)
 {
 	int i, x1, y1;
 	listType *pRunner, *pTrail;
